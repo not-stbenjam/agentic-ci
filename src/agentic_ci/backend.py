@@ -95,7 +95,10 @@ class Backend(ABC):
         try:
             proc.wait(timeout=10)
         except subprocess.TimeoutExpired:
-            proc.kill()
+            try:
+                proc.kill()
+            except OSError:
+                pass
             proc.wait()
         stderr_thread.join(timeout=5)
         rc = proc.returncode
